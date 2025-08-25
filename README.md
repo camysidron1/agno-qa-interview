@@ -49,6 +49,6 @@ python src/main.py
 ```
 
 ## Notes
-- The QuestionAnswerAgent includes a couple of hardcoded examples so it runs offline (no API calls required).
-- If you extend it to use Anthropic (via Agno), ensure ANTHROPIC_API_KEY is set in `.env` and loaded via `python-dotenv`.
+- The QuestionAnswerAgent is defined using the Agno framework and includes a couple of hardcoded examples so the demo question works even without an API key. For questions beyond the provided examples, set ANTHROPIC_API_KEY in `.env`.
+- The EvaluationAgent scaffold is also Agno-based by default; you will flesh out its evaluation logic during the interview.
 - Keep your EvaluationAgent minimal but clear and well-tested if possible.

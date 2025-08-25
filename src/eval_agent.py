@@ -1,15 +1,19 @@
 """
-Evaluation Agent placeholder.
+Evaluation Agent placeholder (Agno-based scaffold).
 
 Interview task: Implement an agent that validates and evaluates the
 QuestionAnswerAgent's output.
 
-You may choose a minimal deterministic approach (regex, parsing) or an
-LLM-assisted approach using Agno + Anthropic. If using an LLM, load
-ANTHROPIC_API_KEY from the environment (e.g., via python-dotenv).
+This class is defined around the Agno framework by default. You are expected to
+use the `agno` Agent inside `evaluate` to drive the evaluation if you choose an
+LLM-assisted route. Load ANTHROPIC_API_KEY from your environment.
 """
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
+import os
+
+from agno import Agent as AgnoAgent  # type: ignore
+from agno.models import Anthropic  # type: ignore
 
 
 @dataclass
@@ -28,7 +32,7 @@ class EvaluationResult:
 
 
 class EvaluationAgent:
-    """Candidate TODOs:
+    """Candidate TODOs (Agno-first design):
 
     Implement the following:
       1) Format validation
@@ -50,6 +54,22 @@ class EvaluationAgent:
     Keep it simple, readable, and well-documented. Add unit tests if time permits.
     """
 
+    def __init__(self) -> None:
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        # Build an Agno Agent to serve as the judge. The exact prompt/usage is up to the candidate.
+        self._judge: Optional[AgnoAgent] = None
+        if api_key:
+            model = Anthropic(api_key=api_key, model="claude-3-haiku-20240307")
+            self._judge = AgnoAgent(
+                model=model,
+                system_prompt=(
+                    "You are an evaluation agent. Given a question and an agent's output,\n"
+                    "1) Verify the output format (two lines: Answer and Citation).\n"
+                    "2) Judge factual correctness concisely.\n"
+                    "Respond with JSON: {\"format_ok\":bool, \"correct\":bool, \"reason\":str}."
+                ),
+            )
+
     def evaluate(self, question: str, qa_output: str) -> EvaluationResult:
         """Evaluate the QA output against the expected format and correctness.
 
@@ -58,7 +78,7 @@ class EvaluationAgent:
           - Parse qa_output to extract `answer` and `citation` using regex or string methods.
           - Validate the format and URL.
           - Judge correctness for known questions (e.g., "What is the capital of France?")
-            or leave hooks for a model-based judge.
+            and/or call `self._judge.run(...)` to use the Agno Agent you built above.
           - Return an EvaluationResult with pass/fail and an explanation.
         """
         raise NotImplementedError("EvaluationAgent.evaluate is not implemented. Complete this in the interview.")
