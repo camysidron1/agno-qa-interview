@@ -14,20 +14,27 @@ Implement the EvaluationAgent in `src/eval_agent.py` so it can:
 You can use any reasonable approach (string parsing, regex, calling an LLM via Agno/Anthropic, etc.). Be prepared to discuss trade-offs.
 
 ## Running the example
-1. Python 3.10+
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Copy environment variables template and set your key if you want to use Anthropic for extensions:
-   ```bash
-   cp .env.example .env
-   # Edit .env to set ANTHROPIC_API_KEY if needed
-   ```
-4. Run the demo:
-   ```bash
-   python src/main.py
-   ```
+Prereqs:
+- Python 3.9+
+
+Recommended: use a virtual environment
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+python -m pip install -U pip
+pip install -r requirements.txt
+```
+
+Environment variables (optional for Anthropic-based extensions):
+```bash
+cp .env.example .env
+# Edit .env to set ANTHROPIC_API_KEY if needed
+```
+
+Run the demo:
+```bash
+python src/main.py
+```
 
 ## Project structure
 ```
